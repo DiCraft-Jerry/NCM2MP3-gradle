@@ -47,7 +47,7 @@ public class View extends JFrame {
 
     private void button2MouseClicked(MouseEvent e) {
         int returnVal = jFileChooser2.showOpenDialog(panel);
-        List<Future<Boolean>> tasks = new ArrayList();
+        List<Future<Boolean>> tasks = new ArrayList<>();
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = jFileChooser2.getSelectedFile();
             String outFilePath = file.getAbsolutePath();
@@ -95,7 +95,7 @@ public class View extends JFrame {
         //======== panel ========
         {
             panel.setBorder(new javax.swing.border.CompoundBorder(new javax.swing.border.TitledBorder(new javax.swing.
-                    border.EmptyBorder(0, 0, 0, 0), "author:charlottexiao", javax.swing.border.TitledBorder.CENTER
+                    border.EmptyBorder(0, 0, 0, 0), "author:charlottexiao   packager:zhuyuan", javax.swing.border.TitledBorder.CENTER
                     , javax.swing.border.TitledBorder.BOTTOM, new Font("Dia\u006cog", Font
                     .BOLD, 12), Color.red), panel.getBorder()));
             panel.addPropertyChangeListener(

@@ -18,6 +18,10 @@ dependencies {
     implementation 'com.formdev:flatlaf:2.0.1'
 }
 
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ['-Xlint:unchecked']
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
