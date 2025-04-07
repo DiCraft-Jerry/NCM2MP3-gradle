@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.dicraft'
-version '4.0.0'
+version '4.0.3'
 
 repositories {
     mavenCentral()
@@ -16,6 +16,11 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
     implementation 'com.formdev:flatlaf:2.0.1'
+    
+    // Test dependencies
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+    testImplementation 'org.mockito:mockito-core:4.3.1'
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -39,4 +44,8 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+test {
+    useJUnitPlatform()
 } 
