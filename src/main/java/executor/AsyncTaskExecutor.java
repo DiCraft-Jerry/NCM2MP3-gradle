@@ -1,6 +1,6 @@
 package executor;
 
-import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author charlottexiao
  */
+@Slf4j
 public class AsyncTaskExecutor {
 
     /**
@@ -34,7 +35,7 @@ public class AsyncTaskExecutor {
     /**
      * 使用无界队列存储线程
      */
-    private static final BlockingDeque<Runnable> WORK_QUEUE = new LinkedBlockingDeque<>();
+    private static final BlockingQueue<Runnable> WORK_QUEUE = new LinkedBlockingQueue<>();
 
     /**
      * 异步线程执行器
@@ -46,7 +47,6 @@ public class AsyncTaskExecutor {
      *
      * @return 异步线程执行器
      */
-
     private static ThreadPoolExecutor createExecutor() {
         return new ThreadPoolExecutor(CORE_POOL_SIZE,
                 MAX_POOL_SIZE,
@@ -71,24 +71,34 @@ public class AsyncTaskExecutor {
      * 执行异步任务
      *
      * @param task 异步任务
-     * @return
+     * @return Future对象，用于获取任务执行结果
      */
-    public static <T> Future<T> submit(Callable<T> task) {
-        try {
-            if (executor == null) {
-                synchronized (AsyncTaskExecutor.class) {
-                    ThreadPoolExecutor temp = executor;
-                    if (temp == null) {
-                        temp = createExecutor();
-                        executor = temp;
-                    }
+    public static <T> CompletableFuture<T> submit(Callable<T> task) {
+        if (executor == null) {
+            synchronized (AsyncTaskExecutor.class) {
+                if (executor == null) {
+                    executor = createExecutor();
                 }
             }
-            Future<T> submit = executor.submit(task);
-            return submit;
+        }
+
+        try {
+            Future<T> future = executor.submit(task);
+            return CompletableFuture.supplyAsync(() -> {
+                try {
+                    return future.get();
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new CompletionException(e);
+                } catch (ExecutionException e) {
+                    throw new CompletionException(e.getCause());
+                }
+            });
         } catch (Exception e) {
-            System.out.format("异步任务启动失败: task %s ,异常： %s", JSON.toJSONString(task), JSON.toJSONString(e));
-            return CompletableFuture.supplyAsync(() -> {throw e;});
+            log.error("Failed to submit task of type: {}", task.getClass().getSimpleName(), e);
+            CompletableFuture<T> future = new CompletableFuture<>();
+            future.completeExceptionally(e);
+            return future;
         }
     }
 }
