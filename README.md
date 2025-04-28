@@ -14,14 +14,14 @@
 1. 下载最新的发布版本
 2. 在命令行中执行：
 ```bash
-java -jar NCM2MP3.jar
+java -jar NCM2MP3-[对应版本号].jar
 ```
 
 ### 从源代码构建
 1. 克隆项目
 ```bash
-git clone https://github.com/your-username/NCM2MP3.git
-cd NCM2MP3
+git clone https://github.com/DiCraft-Jerry/NCM2MP3-gradle.git
+cd NCM2MP3-gradle
 ```
 
 2. 使用 Gradle 构建
@@ -204,3 +204,18 @@ If don't add command, there will open NCM2MP3 GUI directly
 - gitignore文件增加排除文件信息
 - 版本号更新到 v4.0.2
 - 调整了部分代码结构以符合最佳实践。
+
+### [v4.0.3] - 2024-04-27
+#### 改动内容
+- 添加了基本测试用例
+- 实现了文件转换测试
+- 添加了元数据测试
+
+### [v4.0.4] - 2024-04-28
+#### 修复问题
+- 修复读取到异常文件是分配过大内存导致oom的问题
+#### 改动内容
+- 添加了数据大小限制
+- 优化了异常处理
+- 完善了测试文档
+- 添加了测试覆盖率统计
