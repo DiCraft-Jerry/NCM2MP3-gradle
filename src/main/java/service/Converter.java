@@ -1,6 +1,7 @@
 package service;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import mime.Mata;
 import mime.Ncm;
 import org.jaudiotagger.audio.AudioFile;
@@ -26,6 +27,7 @@ import java.util.Base64;
 /**
  * @author charlottexiao
  */
+@Slf4j
 public class Converter {
     /**
      * NCM转换MP3
@@ -67,7 +69,7 @@ public class Converter {
      *
      * @param inputStream ncm文件输入流
      */
-    private void magicHeader(FileInputStream inputStream) throws Exception {
+    void magicHeader(FileInputStream inputStream) throws Exception {
         byte[] bytes = new byte[10];
         inputStream.read(bytes, 0, 10);
     }
@@ -79,10 +81,16 @@ public class Converter {
      * @param inputStream ncm文件输入流
      * @return CR4密钥
      */
-    private byte[] cr4Key(FileInputStream inputStream) throws Exception {
+    byte[] cr4Key(FileInputStream inputStream) throws Exception {
         byte[] bytes = new byte[4];
         inputStream.read(bytes, 0, 4);
         int len = Utils.getLength(bytes);
+        
+        // 在分配内存之前检查数据大小
+        if (len <= 0 || len > 1024 * 1024) { // 限制最大读取 1MB
+            return new byte[0]; // 返回空数组而不是抛出异常
+        }
+        // 分配内存
         bytes = new byte[len];
         inputStream.read(bytes, 0, len);
         //1.按字节对0x64异或
@@ -92,6 +100,9 @@ public class Converter {
         //2.AES解密(其中PKCS5Padding填充模式会去除末尾填充部分)
         bytes = AES.decrypt(bytes, AES.CORE_KEY, AES.TRANSFORMATION, AES.ALGORITHM);
         //3.去除前面`neteasecloudmusic`的17个字节
+        if (bytes.length <= 17) {
+            return new byte[0]; // 返回空数组而不是抛出异常
+        }
         byte[] key = new byte[bytes.length - 17];
         System.arraycopy(bytes, 17, key, 0, key.length);
         return key;
@@ -104,7 +115,7 @@ public class Converter {
      * @param inputStream ncm文件输入流
      * @return JSON格式头部信息
      */
-    private String mataData(FileInputStream inputStream) throws Exception {
+    String mataData(FileInputStream inputStream) throws Exception {
         byte[] bytes = new byte[4];
         inputStream.read(bytes, 0, 4);
         int len = Utils.getLength(bytes);
@@ -134,7 +145,7 @@ public class Converter {
      * @param inputStream ncm文件输入流
      * @return 专辑图片数据
      */
-    private byte[] albumImage(FileInputStream inputStream) throws Exception {
+    byte[] albumImage(FileInputStream inputStream) throws Exception {
         byte[] bytes = new byte[4];
         inputStream.read(bytes, 0, 4);
         int len = Utils.getLength(bytes);
@@ -151,7 +162,7 @@ public class Converter {
      * @param outputStream 存音乐数据的文件输出流
      * @param cr4Key       CR4密钥
      */
-    private void musicData(FileInputStream inputStream, FileOutputStream outputStream, byte[] cr4Key) throws Exception {
+    void musicData(FileInputStream inputStream, FileOutputStream outputStream, byte[] cr4Key) throws Exception {
         CR4 cr4 = new CR4();
         cr4.KSA(cr4Key);
         byte[] buffer = new byte[0x8000];
@@ -167,7 +178,7 @@ public class Converter {
      * 功能:将NCM中各个信息整合到一起,转换成对应音乐格式
      *
      */
-    private void combineFile(Ncm ncm) throws Exception{
+    void combineFile(Ncm ncm) throws Exception{
         AudioFile audioFile = AudioFileIO.read(new File(ncm.getOutFile()));
         Tag tag = audioFile.getTag();
         tag.setField(FieldKey.ALBUM, ncm.getMata().album);
