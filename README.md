@@ -86,7 +86,7 @@ src/main/java/
   - Utils.java 杂七杂八的工具(有注释说明)
 - View 视图
   - view.java 用的Swing做的视图(Flatlaf这个jar包中有皮肤,所以看起来还不错.以后有机会学学javaFX..)
--main.java 
+- main.java 
 
 ## 技术实现
 - 使用 Java 8 开发
@@ -95,7 +95,7 @@ src/main/java/
 - 实现多线程处理，使用线程池管理转换任务
 
 ## 原理说明
-  NCM格式是网易云音乐特有的音乐格式,这种音乐格式用到AES,RC4的加密算法对普通的音乐格式(如MP3,FLAC)进行加密,若要了解该加密过程,最好的方法就是知道起格式图,以及加密的原理(可以参考笔记`密码学.md`).
+NCM格式是网易云音乐特有的音乐格式,这种音乐格式用到AES,RC4的加密算法对普通的音乐格式(如MP3,FLAC)进行加密,若要了解该加密过程,最好的方法就是知道起格式图,以及加密的原理(可以参考笔记`密码学.md`).
 
 
 ## 加密解密流程
@@ -151,10 +151,12 @@ If don't add command, there will open NCM2MP3 GUI directly
 3. 更新相关文档
 
 ## 许可证
-本项目仅供学习用途，请勿用于商业盈利。
+本项目采用 GNU General Public License v3.0 许可证。详见 [LICENSE](LICENSE) 文件。
 
 ## 致谢
 感谢所有为项目做出贡献的开发者。<br/>
+原作者: charlotte-xiao<br/>
+原作者邮箱: sa.xiao@thoughtworks.com <br/>
 原项目地址: https://github.com/charlotte-xiao/NCM2MP3
 
 ## 更多信息
