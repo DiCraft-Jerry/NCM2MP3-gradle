@@ -12,3 +12,4 @@ src/main/resources/META-INF
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
+/logs/
