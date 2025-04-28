@@ -1,8 +1,11 @@
 package mime;
 
+import lombok.Data;
+
 /**
  * @author charlottexiao
  */
+@Data
 public class Mata {
 
     /**
