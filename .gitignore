@@ -2,7 +2,14 @@
 classes/
 target/
 .idea/
+/target
 dependency-reduced-pom.xml
 
 # IDEA构建工件METAINF目录
 src/main/resources/META-INF
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+/logs/
