@@ -14,3 +14,4 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 /logs/
 CLAUDE.md
+.claude/

@@ -63,7 +63,9 @@ public class Utils {
             return;
         }
         File[] files = file.listFiles();
-        assert files != null;
+        if (files == null) {
+            return;
+        }
         for (File f : files) {
             listAllFiles(arrayList, f);
         }
@@ -83,6 +85,10 @@ public class Utils {
                 }
                 finishCnt++;
                 System.out.format("已经完成的任务数量: %s \n", finishCnt);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                failCnt++;
+                System.out.format("异步任务被中断： %s\n", e.getMessage());
             } catch (Exception e) {
                 failCnt++;
                 System.out.format("异步任务执行失败,异常： %s\n", e);

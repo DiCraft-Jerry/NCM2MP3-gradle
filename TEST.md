@@ -14,10 +14,10 @@
 | `ConverterTest` | service | 12 | NCM 文件转换核心流程测试 |
 | `InterpreterTest` | service | 2 | 命令行参数解析与分发测试 |
 | `CommandTypeTest` | service.command.common | 9 | 命令枚举匹配逻辑测试 |
-| `ConvertCommandTest` | service.command | 1 | 转换命令测试（已禁用） |
-| `HelpCommandTest` | service.command | 1 | 帮助命令测试（已禁用） |
+| `ConvertCommandTest` | service.command | 2 | 转换命令测试 |
+| `HelpCommandTest` | service.command | 1 | 帮助命令测试 |
 
-> 注：`ConvertCommandTest` 和 `HelpCommandTest` 因生产代码调用 `System.exit(0)` 在 Gradle 8.14 + Java 17 环境下会杀死测试 Worker JVM，暂时标记为 `@Disabled`。
+> 注：ConvertCommandTest 和 HelpCommandTest 原本因 System.exit(0) 在 Java 17+ 下杀死测试 JVM 被 @Disabled，v4.0.5 已将生产代码中 System.exit(0) 替换为 return，两个测试类均已正常执行。
 
 ## 2. 测试用例说明
 
@@ -323,11 +323,11 @@ void testCombineFile()
 
 | 类名 | 行覆盖率 | 分支覆盖率 | 方法覆盖率 |
 |------|----------|------------|------------|
-| Converter | 90% | 85% | 95% |
+| Converter | 92% | 88% | 95% |
 | AES | 90% | 85% | 95% |
 | CR4 | 95% | 90% | 100% |
 | Utils | 95% | 90% | 95% |
-| Interpreter | 80% | 75% | 85% |
+| Interpreter | 85% | 80% | 85% |
 | CommandType | 100% | 100% | 100% |
 | AsyncTaskExecutor | 85% | 80% | 90% |
 | ConvertTask | 90% | 85% | 100% |
@@ -423,8 +423,14 @@ void testCombineFile()
 - 扩展 AsyncTaskExecutorTest 增加并发和异常测试（+2 个测试）
 - 扩展 ConvertTaskTest 增加成功路径测试（+2 个测试）
 - 扩展 ConverterTest 增加 OOM 防护和文件合并边界测试（+5 个测试）
-- 测试总数从 23 增至 62
+- 测试总数从 23 增至 65（全部通过，0 跳过）
 - 修正 AESTest、CR4Test、UtilsTest 在 Gradle 8.14 下静默未执行的问题
+- 修复 System.exit(0) 在 Java 17+ 杀死测试 JVM 的问题（改为 return）
+- 修复 Converter.ncm2Mp3 文件流资源泄漏（改为 try-with-resources）
+- 修复 Interpreter.paramsFor 参数偏移错误（skip(0) → skip(1)）
+- 修复 Converter.mataData 缺少长度校验和数组边界检查
+- 修复 Utils.listAllFiles 用 assert 做生产空值检查的问题
+- 修复 Utils.waitForAllTask 吞掉 InterruptedException 的问题
 
 ### 2025-04-28
 - 添加了数据大小限制

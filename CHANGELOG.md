@@ -2,6 +2,15 @@
 
 ### [v4.0.5] - 2025-06-10
 
+#### 修复问题
+
+- 修复 Converter.ncm2Mp3 文件流资源泄漏问题（改用 try-with-resources 自动关闭流）
+- 修复 Interpreter.paramsFor 参数偏移错误（skip(0) → skip(1)，命令名不再错误传入处理器）
+- 修复 Converter.mataData 缺少长度上限校验导致的 OOM 风险
+- 修复 Converter.mataData 数组操作缺少边界检查的问题
+- 修复 Utils.listAllFiles 使用 assert 做生产空值检查的问题（改为显式 if null 判断）
+- 修复 Utils.waitForAllTask 吞掉 InterruptedException 未恢复中断状态的问题
+
 #### 新增内容
 
 - 新增 CommandTypeTest 测试类，覆盖所有命令类型匹配逻辑
@@ -14,8 +23,9 @@
 - 扩展 AsyncTaskExecutorTest，增加并发提交和 null 任务测试
 - 扩展 ConvertTaskTest，增加有效文件转换成功路径测试
 - 扩展 ConverterTest，增加 OOM 防护分支和 combineFile null image 分支测试
-- test 从原有 23 个增加到 62 个（60 通过，2 因 System.exit 冲突暂跳过）
+- test 从原有 23 个增加到 65 个（全部通过，0 跳过）
 - 修正 AESTest、CR4Test、UtilsTest 在 Gradle 8.14 下静默未执行的问题
+- 将 ConvertCommand 和 HelpCommand 中 System.exit(0) 替换为 return（修复 Java 17+ 兼容性）
 
 ### [v4.0.0] - 2025-04-07
 

@@ -38,10 +38,9 @@ public class Converter {
      * @return 转换成功与否
      */
     public boolean ncm2Mp3(String ncmFilePath, String outFilePath) {
-        try {
-            Ncm ncm = new Ncm();
-            ncm.setNcmFile(ncmFilePath);
-            FileInputStream inputStream = new FileInputStream(ncm.getNcmFile());
+        Ncm ncm = new Ncm();
+        ncm.setNcmFile(ncmFilePath);
+        try (FileInputStream inputStream = new FileInputStream(ncm.getNcmFile())) {
             magicHeader(inputStream);
             byte[] key = cr4Key(inputStream);
             Mata mata = JSON.parseObject(mataData(inputStream), Mata.class);
@@ -51,8 +50,9 @@ public class Converter {
             File ncmFile = new File(ncmFilePath);
             outFilePath += File.separator + ncmFile.getName().substring(0, ncmFile.getName().length() - 3) + ncm.getMata().format;
             ncm.setOutFile(outFilePath);
-            FileOutputStream outputStream = new FileOutputStream(ncm.getOutFile());
-            musicData(inputStream, outputStream, key);
+            try (FileOutputStream outputStream = new FileOutputStream(ncm.getOutFile())) {
+                musicData(inputStream, outputStream, key);
+            }
             combineFile(ncm);
             System.out.format("转换成功文件：%s\n", outFilePath);
             return true;
@@ -119,6 +119,10 @@ public class Converter {
         byte[] bytes = new byte[4];
         inputStream.read(bytes, 0, 4);
         int len = Utils.getLength(bytes);
+        // 在分配内存之前检查数据大小
+        if (len <= 0 || len > 1024 * 1024) { // 限制最大读取 1MB
+            return "{}"; // 返回空 JSON 对象而不是抛出异常
+        }
         bytes = new byte[len];
         inputStream.read(bytes, 0, len);
         //跳过:CRC(4字节),unused Gap(5字节)
@@ -128,6 +132,9 @@ public class Converter {
             bytes[i] ^= 0x63;
         }
         //2.去除前面`163 key(Don't modify):`22个字节
+        if (bytes.length <= 22) {
+            return "{}"; // 数据太短，返回空 JSON 对象
+        }
         byte[] temp = new byte[bytes.length - 22];
         System.arraycopy(bytes, 22, temp, 0, temp.length);
         //3.Base64进行decode转码
@@ -135,6 +142,9 @@ public class Converter {
         //4.AES解密(其中PKCS5Padding填充模式会去除末尾填充部分)
         temp = AES.decrypt(temp, AES.MATA_KEY, AES.TRANSFORMATION, AES.ALGORITHM);
         //5.去除前面`music:`6个字节后获得JSON
+        if (temp.length <= 6) {
+            return "{}"; // 解密后数据太短，返回空 JSON 对象
+        }
         return new String(temp, 6, temp.length - 6, StandardCharsets.UTF_8);
     }
 
@@ -170,8 +180,6 @@ public class Converter {
             cr4.PRGA(buffer, len);
             outputStream.write(buffer, 0, len);
         }
-        inputStream.close();
-        outputStream.close();
     }
 
     /**

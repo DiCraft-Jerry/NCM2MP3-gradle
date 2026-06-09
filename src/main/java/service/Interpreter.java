@@ -45,7 +45,7 @@ public class Interpreter {
     private List<String> paramsFor(String[] args) {
         return (args.length == 0) ?
                 new ArrayList<>() :
-                Arrays.stream(args).skip(0).collect(Collectors.toList());
+                Arrays.stream(args).skip(1).collect(Collectors.toList());
     }
 
 }
