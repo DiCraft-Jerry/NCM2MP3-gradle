@@ -44,6 +44,6 @@ public class ConvertCommand extends BaseCommand {
                 .map(inputFile -> AsyncTaskExecutor.submit(() -> converter.ncm2Mp3(inputFile.getAbsolutePath(), finalOutputPath.getAbsolutePath())))
                 .collect(Collectors.toList());
         Utils.waitForAllTask(futures, result -> result);
-        System.exit(0);
+        return;
     }
 }

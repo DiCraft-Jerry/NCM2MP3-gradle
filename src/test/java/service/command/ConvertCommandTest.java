@@ -1,29 +1,69 @@
 package service.command;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author 烛远
- * 测试转换命令的目录处理逻辑。
- * 注意：此测试需要重构 ConvertCommand 移除 System.exit(0) 后才能启用。
- * 当前 Gradle 8.14 + Java 17 环境无 SecurityManager，System.exit 会直接杀死测试 JVM。
+ * 测试转换命令的目录处理逻辑
  */
-@Disabled("ConvertCommand.handle() 调用 System.exit(0) 会杀死 Gradle 测试 Worker JVM")
 public class ConvertCommandTest {
 
     /**
-     * 测试转换命令 - 对象创建
-     * 验证 ConvertCommand 可正常实例化
+     * 测试转换命令 - 传入不存在的路径
+     * 预期结果：创建 output 目录
      */
     @Test
-    void testCommandCreation() {
+    void testHandle_NonExistentPath() {
         ConvertCommand command = new ConvertCommand();
-        assertNotNull(command, "ConvertCommand 应该被成功创建");
+        List<String> params = new ArrayList<>();
+        params.add("/non/existent/path");
+
+        command.handle(params);
+
+        java.io.File outputDir = new java.io.File("output");
+        boolean created = outputDir.exists();
+        // 清理
+        if (outputDir.isDirectory()) {
+            java.io.File[] files = outputDir.listFiles();
+            if (files != null) {
+                for (java.io.File f : files) {
+                    f.delete();
+                }
+            }
+            outputDir.delete();
+        }
+        assertTrue(created, "output 目录应该被创建");
+    }
+
+    /**
+     * 测试转换命令 - output 目录已存在时复用
+     * 预期结果：复用已存在的目录
+     */
+    @Test
+    void testHandle_OutputDirAlreadyExists() {
+        // 先创建 output 目录
+        java.io.File outputDir = new java.io.File("output");
+        outputDir.mkdirs();
+        assertTrue(outputDir.exists(), "前置条件: output 目录应已存在");
+
+        ConvertCommand command = new ConvertCommand();
+        List<String> params = new ArrayList<>();
+        params.add("src/test/resources/test-files");
+
+        command.handle(params);
+
+        // 清理
+        if (outputDir.isDirectory()) {
+            java.io.File[] files = outputDir.listFiles();
+            if (files != null) {
+                for (java.io.File f : files) {
+                    f.delete();
+                }
+            }
+            outputDir.delete();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package service.command;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -11,11 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author 烛远
- * 测试帮助命令的输出。
- * 注意：此测试需要重构 HelpCommand 移除 System.exit(0) 后才能启用。
- * 当前 Gradle 8.14 + Java 17 环境无 SecurityManager，System.exit 会直接杀死测试 JVM。
+ * 测试帮助命令的输出
  */
-@Disabled("HelpCommand.handle() 调用 System.exit(0) 会杀死 Gradle 测试 Worker JVM")
 public class HelpCommandTest {
 
     /**
@@ -28,12 +24,18 @@ public class HelpCommandTest {
         PrintStream originalOut = System.out;
         System.setOut(new PrintStream(outContent));
 
-        HelpCommand command = new HelpCommand();
-        // 直接测试输出内容而不调用 handle()
-        // handle() 会调用 System.exit(0)，在 Gradle 测试中会杀死 Worker JVM
-        // 此处验证命令对象可正常实例化并使用
-        assertNotNull(command);
+        try {
+            HelpCommand command = new HelpCommand();
+            command.handle(new ArrayList<>());
+        } finally {
+            System.setOut(originalOut);
+        }
 
-        System.setOut(originalOut);
+        String output = outContent.toString();
+        assertTrue(output.contains("Usage"), "应该包含使用说明");
+        assertTrue(output.contains("Command List"), "应该包含命令列表");
+        assertTrue(output.contains("-v"), "应该包含 view 命令");
+        assertTrue(output.contains("-c"), "应该包含 convert 命令");
+        assertTrue(output.contains("-h"), "应该包含 help 命令");
     }
 }

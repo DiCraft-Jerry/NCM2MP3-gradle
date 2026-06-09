@@ -7,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * @author 烛远
  * 测试命令行参数解释器
- * 主要测试命令分发逻辑。
- * 注意：由于 HelpCommand 和 ConvertCommand 会调用 System.exit(0)，
- * 在 Gradle 测试环境下会导致测试执行器跳过后续测试类。
- * 因此这里仅测试不会触发 System.exit 的路径。
+ * 主要测试命令分发逻辑：
+ * 1. 无参数时打开 GUI
+ * 2. 各个命令的匹配与路由
+ * 3. 参数传递
  */
 public class InterpreterTest {
 
@@ -23,7 +23,7 @@ public class InterpreterTest {
 
     /**
      * 测试空参数 - 默认打开 VIEW
-     * 预期结果：不抛出异常（ViewCommand 不会调 System.exit）
+     * 预期结果：不抛出异常
      */
     @Test
     void testHandleArgs_Empty() {
@@ -32,10 +32,28 @@ public class InterpreterTest {
 
     /**
      * 测试 view 命令
-     * 预期结果：不抛出异常（ViewCommand 不会调 System.exit）
+     * 预期结果：不抛出异常
      */
     @Test
     void testHandleArgs_View() {
         assertDoesNotThrow(() -> interpreter.handleArgs(new String[]{"-v"}));
+    }
+
+    /**
+     * 测试 help 命令
+     * 预期结果：命令正确路由到 HelpCommand，不抛出异常
+     */
+    @Test
+    void testHandleArgs_Help() {
+        assertDoesNotThrow(() -> interpreter.handleArgs(new String[]{"-h"}));
+    }
+
+    /**
+     * 测试 convert 命令
+     * 预期结果：命令正确路由到 ConvertCommand，不抛出异常
+     */
+    @Test
+    void testHandleArgs_Convert() {
+        assertDoesNotThrow(() -> interpreter.handleArgs(new String[]{"-c", "src/test/resources/test-files"}));
     }
 }

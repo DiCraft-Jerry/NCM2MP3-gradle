@@ -17,6 +17,6 @@ public class HelpCommand extends BaseCommand {
         System.out.println("-v,-view                      : open NCM View GUI(default command)");
         System.out.println("-c,--convert [path] ...       : convert NCM File in path to ./output directory");
         System.out.println("-h,-help                      : Help about any command");
-        System.exit(0);
+        return;
     }
 }
