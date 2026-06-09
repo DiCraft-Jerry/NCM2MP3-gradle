@@ -13,3 +13,4 @@ src/main/resources/META-INF
 build/
 !gradle/wrapper/gradle-wrapper.jar
 /logs/
+CLAUDE.md
