@@ -159,13 +159,30 @@ src/main/java/
 ├── view/             # 用户界面
 │   └── view.java
 └── main.java         # 程序入口
+
+src/test/java/
+├── executor/                       # 线程池与任务测试
+│   ├── AsyncTaskExecutorTest.java
+│   └── ConvertTaskTest.java
+├── service/                        # 核心业务测试
+│   ├── ConverterTest.java
+│   ├── InterpreterTest.java
+│   └── command/
+│       ├── ConvertCommandTest.java
+│       ├── HelpCommandTest.java
+│       └── common/
+│           └── CommandTypeTest.java
+└── utils/                          # 工具类测试
+    ├── AESTest.java
+    ├── CR4Test.java
+    └── UtilsTest.java
 ```
 
 ### 构成说明
 
 - executor:控制管理
   - ConvertTask.java 对应每一个音乐转换的任务(消费者)
-  - AsyncTaskExecutor.java 线程池,双空判断懒加载模式,核心线程10个，最大线程数20个，队列长度为100
+  - AsyncTaskExecutor.java 线程池,双空判断懒加载模式,根据 CPU 核心数动态配置线程
 - service:音乐格式转换核心功能实现
   - Converter.java 将NCM音乐解密拆分(==如果想快速看懂这个项目:建议从这个类开始看==), 将分析的各个数据整合到一起
   - Interpreter: 命令行参数解析器(策略模式分配命令处理)

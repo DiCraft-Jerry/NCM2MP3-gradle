@@ -1,5 +1,22 @@
 # 更新日志
 
+### [v4.0.5] - 2025-06-10
+
+#### 新增内容
+
+- 新增 CommandTypeTest 测试类，覆盖所有命令类型匹配逻辑
+- 新增 InterpreterTest 测试类，覆盖命令行参数解析与分发
+- 新增 ConvertCommandTest 和 HelpCommandTest 测试类
+
+#### 改动内容
+
+- 扩展 UtilsTest，增加 waitForAllTask、getLength 边界值、albumImageMimeType 边界值测试
+- 扩展 AsyncTaskExecutorTest，增加并发提交和 null 任务测试
+- 扩展 ConvertTaskTest，增加有效文件转换成功路径测试
+- 扩展 ConverterTest，增加 OOM 防护分支和 combineFile null image 分支测试
+- test 从原有 23 个增加到 62 个（60 通过，2 因 System.exit 冲突暂跳过）
+- 修正 AESTest、CR4Test、UtilsTest 在 Gradle 8.14 下静默未执行的问题
+
 ### [v4.0.0] - 2025-04-07
 
 #### 新增功能
