@@ -417,7 +417,7 @@ void testCombineFile()
 
 ## 11. 更新日志
 
-### 2025-06-10
+### 2026-06-10
 - 新增 CommandTypeTest、InterpreterTest、ConvertCommandTest、HelpCommandTest 测试类
 - 扩展 UtilsTest 增加 waitForAllTask 和边界值测试（+12 个测试）
 - 扩展 AsyncTaskExecutorTest 增加并发和异常测试（+2 个测试）
@@ -426,13 +426,13 @@ void testCombineFile()
 - 测试总数从 23 增至 62
 - 修正 AESTest、CR4Test、UtilsTest 在 Gradle 8.14 下静默未执行的问题
 
-### 2024-04-28
+### 2025-04-28
 - 添加了数据大小限制
 - 优化了异常处理
 - 完善了测试文档
 - 添加了测试覆盖率统计
 
-### 2024-04-27
+### 2025-04-27
 - 添加了基本测试用例
 - 实现了文件转换测试
 - 添加了元数据测试
