@@ -38,6 +38,13 @@ java {
 
 application {
     mainClass = 'main'
+    applicationDefaultJvmArgs = [
+            '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+            '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/java.swing=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/sun.swing=ALL-UNNAMED',
+    ]
 }
 
 jar {
@@ -52,4 +59,9 @@ jar {
 
 test {
     useJUnitPlatform()
+    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+            '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
+            '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/java.swing=ALL-UNNAMED',
+            '--add-opens', 'java.desktop/sun.swing=ALL-UNNAMED'
 } 

@@ -39,11 +39,12 @@ cp "$ICON_FILE" "${APP_DIR}/Contents/Resources/" 2>/dev/null || echo "Warning: I
 
 # 复制 JRE
 echo "Copying JRE..."
-JAVA_HOME=$(/usr/libexec/java_home -v 1.8)
+JAVA_HOME=$(/usr/libexec/java_home -v 17 2>/dev/null || /usr/libexec/java_home -v 1.8 2>/dev/null)
 if [ -z "$JAVA_HOME" ]; then
-    echo "Error: Java 8 not found"
+    echo "Error: Java 17 or Java 8 not found"
     exit 1
 fi
+echo "Using JRE at: $JAVA_HOME"
 
 # 复制 JRE 文件
 cp -R "$JAVA_HOME"/* "${APP_DIR}/Contents/PlugIns/jre/"
@@ -52,7 +53,13 @@ cp -R "$JAVA_HOME"/* "${APP_DIR}/Contents/PlugIns/jre/"
 cat > "${APP_DIR}/Contents/MacOS/JavaAppLauncher" << 'EOF'
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-"$DIR/../PlugIns/jre/bin/java" -jar "$DIR/../Java/NCM2MP3.jar"
+"$DIR/../PlugIns/jre/bin/java" \
+    --add-opens java.base/java.lang=ALL-UNNAMED \
+    --add-opens java.base/java.lang.reflect=ALL-UNNAMED \
+    --add-opens java.base/java.util=ALL-UNNAMED \
+    --add-opens java.desktop/java.swing=ALL-UNNAMED \
+    --add-opens java.desktop/sun.swing=ALL-UNNAMED \
+    -jar "$DIR/../Java/NCM2MP3.jar"
 EOF
 
 chmod +x "${APP_DIR}/Contents/MacOS/JavaAppLauncher"
@@ -86,6 +93,16 @@ cat > "${APP_DIR}/Contents/Info.plist" << EOF
     <key>JVMOptions</key>
     <array>
         <string>-Xmx512m</string>
+        <string>--add-opens</string>
+        <string>java.base/java.lang=ALL-UNNAMED</string>
+        <string>--add-opens</string>
+        <string>java.base/java.lang.reflect=ALL-UNNAMED</string>
+        <string>--add-opens</string>
+        <string>java.base/java.util=ALL-UNNAMED</string>
+        <string>--add-opens</string>
+        <string>java.desktop/java.swing=ALL-UNNAMED</string>
+        <string>--add-opens</string>
+        <string>java.desktop/sun.swing=ALL-UNNAMED</string>
     </array>
 </dict>
 </plist>

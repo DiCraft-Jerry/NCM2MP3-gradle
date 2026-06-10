@@ -12,6 +12,7 @@
 - 修复 Utils.waitForAllTask 吞掉 InterruptedException 未恢复中断状态的问题
 - 优化 AsyncTaskExecutor 将无界队列改为有界队列（容量 1000），配合 CallerRunsPolicy 实现背压
 - 优化 AsyncTaskExecutor.submit 消除 Future+CompletableFuture 双重线程消耗，改为直接提交到线程池
+- 添加 Java 17+ 模块系统兼容支持（--add-opens 参数），更新打包脚本适配 Java 17 JRE
 
 #### 新增内容
 

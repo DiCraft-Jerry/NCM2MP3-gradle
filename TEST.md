@@ -432,6 +432,7 @@ void testCombineFile()
 - 修复 Utils.listAllFiles 用 assert 做生产空值检查的问题
 - 修复 Utils.waitForAllTask 吞掉 InterruptedException 的问题
 - 优化 AsyncTaskExecutor 无界队列→有界队列，消除 Future+CompletableFuture 双重线程消耗
+- 添加 Java 17+ 模块系统 --add-opens 参数支持
 
 ### 2025-04-28
 - 添加了数据大小限制

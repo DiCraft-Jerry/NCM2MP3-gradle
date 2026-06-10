@@ -57,7 +57,12 @@ javapackager \
     -Bwin.shortcutHint=true \
     -Bwin.menuHint=true \
     -Bwin.dirChooser=true \
-    -Bwin.perUserInstall=true
+    -Bwin.perUserInstall=true \
+    -BjvmOptions="--add-opens java.base/java.lang=ALL-UNNAMED" \
+    -BjvmOptions="--add-opens java.base/java.lang.reflect=ALL-UNNAMED" \
+    -BjvmOptions="--add-opens java.base/java.util=ALL-UNNAMED" \
+    -BjvmOptions="--add-opens java.desktop/java.swing=ALL-UNNAMED" \
+    -BjvmOptions="--add-opens java.desktop/sun.swing=ALL-UNNAMED"
 
 # 检查是否成功
 if [ -f "$OUTPUT_DIR/${APP_NAME}.exe" ]; then
