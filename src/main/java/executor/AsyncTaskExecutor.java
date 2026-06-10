@@ -33,9 +33,9 @@ public class AsyncTaskExecutor {
     private static final long KEEP_ALIVE_TIME = 1L;  // 空闲线程存活时间
 
     /**
-     * 使用无界队列存储线程
+     * 有界队列，防止高负载下内存溢出
      */
-    private static final BlockingQueue<Runnable> WORK_QUEUE = new LinkedBlockingQueue<>();
+    private static final BlockingQueue<Runnable> WORK_QUEUE = new LinkedBlockingQueue<>(1000);
 
     /**
      * 异步线程执行器
@@ -74,6 +74,9 @@ public class AsyncTaskExecutor {
      * @return Future对象，用于获取任务执行结果
      */
     public static <T> CompletableFuture<T> submit(Callable<T> task) {
+        if (task == null) {
+            throw new NullPointerException("task must not be null");
+        }
         if (executor == null) {
             synchronized (AsyncTaskExecutor.class) {
                 if (executor == null) {
@@ -83,17 +86,13 @@ public class AsyncTaskExecutor {
         }
 
         try {
-            Future<T> future = executor.submit(task);
             return CompletableFuture.supplyAsync(() -> {
                 try {
-                    return future.get();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
+                    return task.call();
+                } catch (Exception e) {
                     throw new CompletionException(e);
-                } catch (ExecutionException e) {
-                    throw new CompletionException(e.getCause());
                 }
-            });
+            }, executor);
         } catch (Exception e) {
             log.error("Failed to submit task of type: {}", task.getClass().getSimpleName(), e);
             CompletableFuture<T> future = new CompletableFuture<>();

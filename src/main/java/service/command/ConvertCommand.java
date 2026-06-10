@@ -39,6 +39,7 @@ public class ConvertCommand extends BaseCommand {
 
         //中途有修改过outputPath的对象引用，要copy一份final才能传入lambda
         File finalOutputPath = outputPath;
+        // todo 确认这里是否存在线程安全问题
         Converter converter = new Converter();
         List<Future<Boolean>> futures = files.stream()
                 .map(inputFile -> AsyncTaskExecutor.submit(() -> converter.ncm2Mp3(inputFile.getAbsolutePath(), finalOutputPath.getAbsolutePath())))

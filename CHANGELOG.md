@@ -10,6 +10,8 @@
 - 修复 Converter.mataData 数组操作缺少边界检查的问题
 - 修复 Utils.listAllFiles 使用 assert 做生产空值检查的问题（改为显式 if null 判断）
 - 修复 Utils.waitForAllTask 吞掉 InterruptedException 未恢复中断状态的问题
+- 优化 AsyncTaskExecutor 将无界队列改为有界队列（容量 1000），配合 CallerRunsPolicy 实现背压
+- 优化 AsyncTaskExecutor.submit 消除 Future+CompletableFuture 双重线程消耗，改为直接提交到线程池
 
 #### 新增内容
 
