@@ -61,7 +61,6 @@ javapackager \
     -BjvmOptions="--add-opens java.base/java.lang=ALL-UNNAMED" \
     -BjvmOptions="--add-opens java.base/java.lang.reflect=ALL-UNNAMED" \
     -BjvmOptions="--add-opens java.base/java.util=ALL-UNNAMED" \
-    -BjvmOptions="--add-opens java.desktop/java.swing=ALL-UNNAMED" \
     -BjvmOptions="--add-opens java.desktop/sun.swing=ALL-UNNAMED"
 
 # 检查是否成功

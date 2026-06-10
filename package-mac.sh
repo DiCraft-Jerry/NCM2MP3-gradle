@@ -57,7 +57,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
     --add-opens java.base/java.lang=ALL-UNNAMED \
     --add-opens java.base/java.lang.reflect=ALL-UNNAMED \
     --add-opens java.base/java.util=ALL-UNNAMED \
-    --add-opens java.desktop/java.swing=ALL-UNNAMED \
     --add-opens java.desktop/sun.swing=ALL-UNNAMED \
     -jar "$DIR/../Java/NCM2MP3.jar"
 EOF
@@ -99,8 +98,6 @@ cat > "${APP_DIR}/Contents/Info.plist" << EOF
         <string>java.base/java.lang.reflect=ALL-UNNAMED</string>
         <string>--add-opens</string>
         <string>java.base/java.util=ALL-UNNAMED</string>
-        <string>--add-opens</string>
-        <string>java.desktop/java.swing=ALL-UNNAMED</string>
         <string>--add-opens</string>
         <string>java.desktop/sun.swing=ALL-UNNAMED</string>
     </array>

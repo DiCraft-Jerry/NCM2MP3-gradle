@@ -13,6 +13,7 @@
 - 优化 AsyncTaskExecutor 将无界队列改为有界队列（容量 1000），配合 CallerRunsPolicy 实现背压
 - 优化 AsyncTaskExecutor.submit 消除 Future+CompletableFuture 双重线程消耗，改为直接提交到线程池
 - 添加 Java 17+ 模块系统兼容支持（--add-opens 参数），更新打包脚本适配 Java 17 JRE
+- 保留 ConvertCommand/HelpCommand 中 System.exit(0)，通过 ExitInterceptor(SecurityManager) 在测试中拦截退出调用，兼顾进程退出语义与测试兼容性
 
 #### 新增内容
 

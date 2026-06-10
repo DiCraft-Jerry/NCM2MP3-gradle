@@ -42,7 +42,6 @@ application {
             '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
             '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
             '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-            '--add-opens', 'java.desktop/java.swing=ALL-UNNAMED',
             '--add-opens', 'java.desktop/sun.swing=ALL-UNNAMED',
     ]
 }
@@ -59,9 +58,11 @@ jar {
 
 test {
     useJUnitPlatform()
-    jvmArgs '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+    // -Djava.security.manager=allow: Java 17+ 启用 SecurityManager 支持
+    // --add-opens: Java 17+ 模块系统开放反射和 Swing 内部 API 给非模块化代码
+    jvmArgs '-Djava.security.manager=allow',
+            '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
             '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
             '--add-opens', 'java.base/java.util=ALL-UNNAMED',
-            '--add-opens', 'java.desktop/java.swing=ALL-UNNAMED',
             '--add-opens', 'java.desktop/sun.swing=ALL-UNNAMED'
 } 
