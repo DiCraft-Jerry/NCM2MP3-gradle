@@ -433,6 +433,7 @@ void testCombineFile()
 - 修复 Utils.waitForAllTask 吞掉 InterruptedException 的问题
 - 优化 AsyncTaskExecutor 无界队列→有界队列，消除 Future+CompletableFuture 双重线程消耗
 - 添加 Java 17+ 模块系统 --add-opens 参数支持
+- 升级测试依赖和主要库版本，test 任务增加并行执行支持
 
 ### 2025-04-28
 - 添加了数据大小限制

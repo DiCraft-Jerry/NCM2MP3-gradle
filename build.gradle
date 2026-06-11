@@ -13,18 +13,18 @@ repositories {
 dependencies {
     implementation 'net.jthink:jaudiotagger:3.0.1'
     implementation 'com.alibaba:fastjson:1.2.83'
-    compileOnly 'org.projectlombok:lombok:1.18.26'
-    annotationProcessor 'org.projectlombok:lombok:1.18.26'
-    implementation 'com.formdev:flatlaf:2.0.1'
-    // SLF4J + Logback
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+    implementation 'com.formdev:flatlaf:3.5.4'
+    // SLF4J + Logback (保持 SLF4J 1.7.x 兼容 Java 8)
     implementation 'org.slf4j:slf4j-api:1.7.36'
-    implementation 'ch.qos.logback:logback-classic:1.2.11'
-    implementation 'ch.qos.logback:logback-core:1.2.11'
-    
-    // Test dependencies
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testImplementation 'org.mockito:mockito-core:4.3.1'
+    implementation 'ch.qos.logback:logback-classic:1.2.13'
+    implementation 'ch.qos.logback:logback-core:1.2.13'
+
+    // Test dependencies (JUnit 5.10.x 为 Java 8 最后支持线，Mockito 4.x 兼容 Java 8)
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.5'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.5'
+    testImplementation 'org.mockito:mockito-core:4.11.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -53,6 +53,10 @@ jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+    // TODO: duplicatesStrategy = EXCLUDE 在遇到同名文件时静默丢弃，可能导致
+    // 运行时 ClassNotFoundException 或缺少 SPI 配置文件（如 META-INF/services）。
+    // 建议迁移到 Shadow 插件（com.github.johnrengelman.shadow），
+    // 使用 mergeServiceFiles() 正确处理服务描述符合并。
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -65,4 +69,6 @@ test {
             '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
             '--add-opens', 'java.base/java.util=ALL-UNNAMED',
             '--add-opens', 'java.desktop/sun.swing=ALL-UNNAMED'
+    // 并行测试：使用半数 CPU 核心数个 fork，加速测试执行
+    maxParallelForks = Math.max(1, Runtime.runtime.availableProcessors().intdiv(2))
 } 

@@ -14,6 +14,9 @@
 - 优化 AsyncTaskExecutor.submit 消除 Future+CompletableFuture 双重线程消耗，改为直接提交到线程池
 - 添加 Java 17+ 模块系统兼容支持（--add-opens 参数），更新打包脚本适配 Java 17 JRE
 - 保留 ConvertCommand/HelpCommand 中 System.exit(0)，通过 ExitInterceptor(SecurityManager) 在测试中拦截退出调用，兼顾进程退出语义与测试兼容性
+- 升级依赖版本：Lombok 1.18.26→1.18.36, FlatLaf 2.0.1→3.5.4, logback 1.2.11→1.2.13, JUnit 5.8.2→5.10.5, Mockito 4.3.1→4.11.0
+- 为 fat JAR duplicatesStrategy=EXCLUDE 添加 TODO 注释，建议迁移到 Shadow 插件
+- 测试配置增加 maxParallelForks 并行执行加速
 
 #### 新增内容
 
